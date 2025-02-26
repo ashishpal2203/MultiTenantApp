@@ -12,7 +12,7 @@
     <form method="GET" action="{{ route('employees.index') }}" class="mb-4">
     <div class="row">
         <!-- Department Filter -->
-        <div class="col-md-2">
+        <div class="col-md-1">
             <label>Department:</label>
             <select name="department" class="form-control">
                 <option value="">All</option>
@@ -37,7 +37,7 @@
             <input type="number" name="max_salary" class="form-control" placeholder="Max Salary" value="{{ request('max_salary') }}">
         </div>
 
-        <div class="col-md-2">
+        <div class="col-md-3">
             <label>Search:</label>
             <input type="text" name="search" class="form-control" placeholder="Search by Name or Email" value="{{ request('search') }}">
         </div>
@@ -64,23 +64,30 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($employees as $employee)
+            @if ($employees->isEmpty())
                 <tr>
-                    <td>{{ $employee->name }}</td>
-                    <td>{{ $employee->email }}</td>
-                    <td>{{ $employee->position }}</td>
-                    <td>{{ $employee->department }}</td>
-                    <td>₹{{ $employee->salary }}</td>
-                    <td>
-                        <a href="{{ route('employees.edit', $employee) }}" class="btn btn-warning">Edit</a>
-                        <form action="{{ route('employees.destroy', $employee) }}" method="POST" style="display:inline;">
-                            @csrf @method('DELETE')
-                            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
-                        </form>
-                    </td>
+                    <td colspan="6" class="text-center text-muted fw-bold">No employees found.</td>
                 </tr>
-            @endforeach
+            @else
+                @foreach ($employees as $employee)
+                    <tr>
+                        <td>{{ $employee->name }}</td>
+                        <td>{{ $employee->email }}</td>
+                        <td>{{ $employee->position }}</td>
+                        <td>{{ $employee->department }}</td>
+                        <td>₹{{ $employee->salary }}</td>
+                        <td>
+                            <a href="{{ route('employees.edit', $employee) }}" class="btn btn-warning">Edit</a>
+                            <form action="{{ route('employees.destroy', $employee) }}" method="POST" style="display:inline;">
+                                @csrf @method('DELETE')
+                                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                @endforeach
+            @endif
         </tbody>
+        
     </table>
 </div>
 @endsection
